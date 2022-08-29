@@ -1,3 +1,6 @@
-gcloud builds submit --tag gcr.io/stat4002/probability  --project=stat4002
+# 2-PRB
+Probability
 
-gcloud run deploy --image gcr.io/stat4002/probability --platform managed  --project=stat4002 --allow-unauthenticated
+Python version 3.10
+
+To run, create a Python virtual environment and install the packages as specified in requirements.txt using pip install -r requirements.txt
