@@ -2,6 +2,7 @@ from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
 from prb_model import create_blank_fig
 
+# Specify HTML <head> elements
 app = Dash(__name__,
            title="Probability",
            update_title=None,
@@ -9,10 +10,10 @@ app = Dash(__name__,
            meta_tags=[{"name": "viewport",
                        "content": "width=device-width, initial-scale=1.0, maximum-scale=1.0"}])
 
-blank_fig = create_blank_fig()
-
+# Specify app layout (HTML <body> elements) using dash.html, dash.dcc and dash_bootstrap_components
+# All component IDs should relate to the Input or Output of callback functions in *_controller.py
 app.layout = dbc.Container([
-    # dbc.Row(html.H1("Probability")),
+    # Data Stores, Instructions, Results and Graph
     dbc.Row([
         dcc.Interval(id="interval",
                      interval=1000,
@@ -21,15 +22,13 @@ app.layout = dbc.Container([
         dcc.Store(id="win-store"),
         dcc.Store(id="prob-store"),
         dcc.Store(id="win-rate-store"),
-        dcc.Store(id="my-tickets-store"),
-        dcc.Store(id="winning-ticket-store"),
         dbc.Col([
             dbc.Card([
                 dbc.CardBody(children=[
                     "The probability of winning a raffle with n tickets, where you buy x tickets, and one winning ticket is drawn, is x/n.",
                     html.Br(),
                     html.Br(),
-                    "Enter the total number of tickets (n) and the number of tickets bought (x), and set the number of draws as 10. Is the observed win rate the same as the expected win rate? What about if you draw 20 times? 50 times?"])]),
+                    "Enter the number of tickets bought (x) and the total number of tickets (n), and set the number of draws as 10. Is the observed win rate the same as the expected win rate? What about if you draw 20 times? 50 times?"])]),
             dbc.Card([
                 dbc.CardBody([
                     html.H4("Results"),
@@ -51,17 +50,25 @@ app.layout = dbc.Container([
             ])
         ], xs=12, sm=12, md=12, lg=5, xl=5),
         dbc.Col([
+            # Graph components are placed inside a Div with role="img" to manage the experience for screen reader users
             html.Div([
                 dcc.Graph(id="graph",
-                          figure=blank_fig,
-                          config={"displayModeBar": False})
-            ], role="img", style={"height": 350}),
+                          figure=create_blank_fig(),
+                          config={"displayModeBar": False,
+                                  "doubleClick": False,
+                                  "editable": False,
+                                  "scrollZoom": False,
+                                  "showAxisDragHandles": False})
+            ], role="img", style={"height": 350}, **{"aria-hidden": "true"}),
+            # A second Div is used to associate alt text with the relevant Graph component to manage the experience for screen reader users, styled using CSS
             html.Div(id="sr-graph",
                      children=[],
                      className="sr-only",
-                     **{"aria-live": "polite"})
+                     **{"aria-live": "polite"}),
+            html.Br(),
         ], xs=12, sm=12, md=12, lg=7, xl=7)
     ]),
+    # User Input
     dbc.Row([
         dbc.Col([
             html.Div([
@@ -106,17 +113,13 @@ app.layout = dbc.Container([
                        html_for="slider"),
             dcc.Slider(id="slider",
                        min=10,
-                       max=50,
-                       step=10,
+                       max=30,
+                       step=5,
                        value=10),
             html.Div([
                 dbc.Button(id="draw",
                            n_clicks=0,
                            children="Draw",
-                           class_name="button"),
-                dbc.Button(id="stop",
-                           n_clicks=0,
-                           children="Stop",
                            class_name="button")
             ], className="d-flex justify-content-center", style={"margin": "0 auto"}),
         ], xs=12, sm=12, md=12, lg=7, xl=7)
