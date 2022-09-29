@@ -129,6 +129,6 @@ def set_draw_speed(value):
 
 
 if __name__ == "__main__":
-    # app.run(debug=True)
+    app.run(debug=True)
     # To deploy on Docker, replace app.run(debug=True) with the following:
-    app.run(debug=False, host="0.0.0.0", port=8080, dev_tools_ui=False)
+    # app.run(debug=False, host="0.0.0.0", port=8080, dev_tools_ui=False)
